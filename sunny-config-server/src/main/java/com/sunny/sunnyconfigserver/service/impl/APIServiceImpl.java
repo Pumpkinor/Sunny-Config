@@ -21,7 +21,7 @@ public class APIServiceImpl implements APIService {
     
     @Override
     public List<Configs> list(final String app, final String env, final String ns) {
-        return null;
+        return configsMapper.list(app, env, ns);
     }
     
     @Override

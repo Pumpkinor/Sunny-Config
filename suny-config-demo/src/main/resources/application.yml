@@ -1,0 +1,8 @@
+spring:
+    application:
+        name: suny-config-demo
+sunny:
+    app: sunny-config-demo
+    a: a001
+    b: b001
+    c: c001
