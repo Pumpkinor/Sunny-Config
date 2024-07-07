@@ -7,6 +7,7 @@ import com.sunny.sunnyconfigclient.model.Configs;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +29,15 @@ public class SunnyRepositoryImpl implements SunnyRepository{
     
     ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     
+    List<SunnyRepositoryChangeListener> listeners = new ArrayList<>();
+    
     public SunnyRepositoryImpl(final ConfigMeta configMeta) {
         this.configMeta = configMeta;
         executorService.scheduleWithFixedDelay(this::heartBeat, 0, 1000, TimeUnit.MICROSECONDS);
+    }
+    
+    public void addListener(SunnyRepositoryChangeListener listener) {
+        listeners.add(listener);
     }
     
     private void heartBeat() {
@@ -40,8 +47,11 @@ public class SunnyRepositoryImpl implements SunnyRepository{
         if (version != null && version > oldVersion){
             configsVersion.put(configMeta.genKey(), version);
             log.info("configs changed, version:{}", version);
-            configs.put(key,findAll());
+            Map<String, String> newConfigs = findAll();
+            configs.put(key,newConfigs);
             log.info("configs:{}", configs.get(key));
+//            配置发生变化的时候 发送一个事件通知spring cloud来更新配置bean
+            listeners.forEach(l -> l.onChange(new SunnyRepositoryChangeListener.ChangeEvent(configMeta, newConfigs)));
         }
     }
     

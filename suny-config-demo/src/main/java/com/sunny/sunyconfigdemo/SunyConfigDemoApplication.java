@@ -11,8 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-import java.util.Arrays;
-
 @SpringBootApplication
 @EnableConfigurationProperties(SunnyConfigProperty.class)
 @EnableSunnyConfigClient
@@ -32,10 +30,9 @@ public class SunyConfigDemoApplication {
     
     @Bean
     ApplicationRunner applicationRunner() {
-        System.err.println(Arrays.toString(environment.getActiveProfiles()));
         return args -> {
             System.err.println(a);
-            System.err.println(sunnyConfigProperty.getApp());
+            System.err.println(sunnyConfigProperty);
         };
     }
 }

@@ -13,4 +13,6 @@ public interface SunnyRepository {
     }
     
     Map<String, String> getConfig();
+    
+    void addListener(SunnyRepositoryChangeListener listener);
 }

@@ -4,9 +4,9 @@ POST http://localhost:9129/update?app=app1&env=dev&ns=public
 Content-Type: application/json
 
 {
-  "kk.a": "dev8888",
-  "kk.c": "cc200",
-  "kk.d": "dd200"
+  "sunny.a": "dev0001",
+  "sunny.b": "cc200",
+  "sunny.c": "dd200"
 }
 
 ### version
