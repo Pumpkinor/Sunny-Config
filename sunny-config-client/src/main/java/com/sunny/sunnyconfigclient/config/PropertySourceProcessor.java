@@ -1,7 +1,7 @@
 package com.sunny.sunnyconfigclient.config;
 
+import com.sunny.sunnyconfigclient.model.ConfigMeta;
 import com.sunny.sunnyconfigclient.service.SunnyConfigService;
-import com.sunny.sunnyconfigclient.service.SunnyConfigServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -13,9 +13,6 @@ import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PropertySourceProcessor implements BeanFactoryPostProcessor, EnvironmentAware, PriorityOrdered
 {
@@ -32,12 +29,12 @@ public class PropertySourceProcessor implements BeanFactoryPostProcessor, Enviro
             return;
         }
 //        本地没有SunnyPropertySource，则通过http去sunny-config-server获取配置 TODO
-        Map<String, String> config = new HashMap<>();
-        config.put("sunny.app", "app002");
-        config.put("sunny.a", "a002");
-        config.put("sunny.b", "b002");
-        config.put("sunny.c", "c002");
-        SunnyConfigService sunnyConfigService = new SunnyConfigServiceImpl(config);
+        String app = configurableEnvironment.getProperty("sunny.app", "app1");
+        String env = configurableEnvironment.getProperty("sunny.env", "dev");
+        String nameSpace = configurableEnvironment.getProperty("sunny.ns", "public");
+        String configServer = configurableEnvironment.getProperty("sunny.config-server", "http://127.0.0.1:9129");
+        final ConfigMeta configMeta = new ConfigMeta(app, env, nameSpace, configServer);
+        SunnyConfigService sunnyConfigService = SunnyConfigService.getDefault(configMeta);
         SunnyPropertySource sunnyPropertySource = new SunnyPropertySource(SUNNY_PROPERTY_SOURCE, sunnyConfigService);
         CompositePropertySource compositePropertySource = new CompositePropertySource(SUNNY_PROPERTY_SOURCES);
         compositePropertySource.addPropertySource(sunnyPropertySource);

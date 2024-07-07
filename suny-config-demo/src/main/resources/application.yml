@@ -2,7 +2,9 @@ spring:
     application:
         name: suny-config-demo
 sunny:
-    app: sunny-config-demo
+    config-server: http://localhost:9129
+    app: app1
     a: a001
     b: b001
     c: c001
+    
